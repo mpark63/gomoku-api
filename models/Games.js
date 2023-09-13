@@ -12,8 +12,8 @@ for (let i = 0; i < 19; i++) {
 
 const GameSchema = new mongoose.Schema({
   code: { type: String, required: true, unique: true },
-  whiteUsername: { type: String, required: true },
-  blackUsername: { type: String, required: true },
+  whiteUsername: { type: String, default: "" },
+  blackUsername: { type: String, default: "" },
   currentTurn: { type: String, default: "black" },
   positions: { type: Array, default: initialPositions },
   gameOver: { type: Boolean, default: false },
