@@ -10,7 +10,7 @@ const httpServer = createServer(app);
 
 export const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:9000",
+    origin: ["http://localhost:9000", "https://gomokumoku.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   },
