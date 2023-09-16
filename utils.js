@@ -28,94 +28,93 @@ export const checkGameOver = (board, newX, newY) => {
   const endX = newX + 4 > 18 ? 18 : newX + 4;
   const endY = newY + 4 > 18 ? 18 : newY + 4;
 
-  // vertical check
-  for (let x = startX; x <= endX; x++) {
-    for (let y = startY; y <= endY; y++) {
-      if (board[x][y] !== "") {
-        let count = 0;
-        const color = board[x][y];
-        while (y <= endY && board[x][y] === color) {
-          y++;
-          count++;
-          if (count == 5) {
-            return true;
-          }
-        }
-      }
-    }
-  }
-
   // horizantal check
-  for (let y = startY; y <= endY; y++) {
-    for (let x = startX; x <= endX; x++) {
-      if (board[x][y] !== "") {
-        let count = 0;
-        const color = board[x][y];
-        while (x <= endX && board[x][y] === color) {
-          x++;
-          count++;
-          if (count == 5) {
-            return true;
-          }
-        }
-      }
+  let y = newY;
+  let count = 0;
+  let color = "";
+  console.log(newX, newY);
+  for (let x = startX; x <= endX; x++) {
+    console.log(x, y, board[x][y]);
+    if (board[x][y] === "") {
+      count = 0;
+      color = "";
+    } else if (color === board[x][y]) {
+      count++;
+    } else {
+      count = 1;
+      color = board[x][y];
+    }
+    if (count >= 5) {
+      return true;
     }
   }
+  console.log("horizantal check complete");
 
-  // TODO: diagonal check
-  // for (let y = startY; y <= endY; y++) {
-  //   let currY = y;
-  //   let currX = startX;
-  //   let count = 0;
-  //   // ----
-  //   //    |
-  //   while (currY <= endY && currX <= endX) {
-  //     currY++;
-  //     currX++;
-  //     count++;
-  //     if (count == 5) {
-  //       return true;
-  //     }
-  //   }
-  //   //    |
-  //   // ____
-  //   currY = y;
-  //   currX = endX;
-  //   count = 0;
-  //   while (currY <= endY && currX >= startX) {
-  //     currY++;
-  //     currX--;
-  //     count++;
-  //     if (count == 5) {
-  //       return true;
-  //     }
-  //   }
-  // }
+  // vertical check
+  let x = newX;
+  count = 0;
+  color = "";
+  for (let y = startY; y <= endY; y++) {
+    console.log(x, y, board[x][y], count);
+    if (board[x][y] === "") {
+      count = 0;
+      color = "";
+    } else if (color === board[x][y]) {
+      count++;
+    } else {
+      count = 1;
+      color = board[x][y];
+    }
+    if (count >= 5) {
+      return true;
+    }
+  }
+  console.log("vertical check complete");
 
-  // for (let x = startX; y <= endX; x++) {
-  //   let currY = startY;
-  //   let currX = x;
-  //   let count = 0;
-  //   while (currY <= endY && currX <= endX) {
-  //     currY++;
-  //     currX++;
-  //     count++;
-  //     if (count == 5) {
-  //       return true;
-  //     }
-  //   }
-  //   currY = startY;
-  //   currX = x;
-  //   count = 0;
-  //   while (currY <= endY && currX >= startX) {
-  //     currY++;
-  //     currX--;
-  //     count++;
-  //     if (count == 5) {
-  //       return true;
-  //     }
-  //   }
-  // }
+  // diagonal check
+  y = startY;
+  x = startX;
+  count = 0;
+  color = "";
+  while (y <= endY && x <= endX) {
+    if (board[x][y] === "") {
+      count = 0;
+      color = "";
+    } else if (color === board[x][y]) {
+      count++;
+    } else {
+      count = 1;
+      color = board[x][y];
+    }
+    x++;
+    y++;
+    if (count >= 5) {
+      return true;
+    }
+  }
+  console.log("diagonal check 1 complete");
+
+  // diagonal check
+  y = endY;
+  x = startX;
+  count = 0;
+  while (y >= startX && x <= endX) {
+    if (board[x][y] === "") {
+      count = 0;
+      color = "";
+    } else if (color === board[x][y]) {
+      count++;
+    } else {
+      count = 1;
+      color = board[x][y];
+    }
+    x++;
+    y--;
+    if (count >= 5) {
+      return true;
+    }
+  }
+  console.log("diagonal check 2 complete");
 
   return false;
 };

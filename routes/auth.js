@@ -20,7 +20,10 @@ router.post("/login", async (req, res) => {
 
     const users = await Users.find({ username });
     if (users.length === 0) {
-      const user = await Users.create({ username, password: hashPassword(password) });
+      const user = await Users.create({
+        username,
+        password: hashPassword(password),
+      });
       return dataHandler(res, 200, { username: user.username });
     } else {
       const user = users[0];
@@ -31,7 +34,6 @@ router.post("/login", async (req, res) => {
           message: "Wrong username or password!",
         });
       }
-
       return dataHandler(res, 201, { username: user.username });
     }
   } catch (err) {

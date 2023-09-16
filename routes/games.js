@@ -1,6 +1,8 @@
 import express from "express";
 import Games from "../models/Games.js";
 import { dataHandler, errorHandler, checkGameOver } from "../utils.js";
+import { io } from "../server.js";
+
 const router = express.Router();
 
 /* Create new game. */
@@ -40,8 +42,6 @@ router.get("/games/:code", async function (req, res) {
       errorHandler(res, 403, {
         message: "You are not a player in this game!",
       });
-    } else if (game.gameOver) {
-      errorHandler(res, 400, { message: "Game is over!" });
     } else {
       dataHandler(res, 200, game);
     }
@@ -77,9 +77,12 @@ router.patch("/games/:code", async function (req, res) {
   } else {
     game.positions[x][y] = game.currentTurn;
     game.markModified("positions");
-    game.currentTurn = game.currentTurn === "black" ? "white" : "black";
     game.gameOver = checkGameOver(game.positions, x, y);
+    if (!game.gameOver) {
+      game.currentTurn = game.currentTurn === "black" ? "white" : "black";
+    }
     await game.save();
+    io.to(game.code).emit("update", game);
     dataHandler(res, 200, game);
   }
 });
