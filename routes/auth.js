@@ -20,12 +20,14 @@ router.post("/login", async (req, res) => {
 
     const users = await Users.find({ username });
     if (users.length === 0) {
+      // create new user 
       const user = await Users.create({
         username,
         password: hashPassword(password),
       });
       return dataHandler(res, 200, { username: user.username });
     } else {
+      // return existing user
       const user = users[0];
 
       const result = verifyPassword(password, user.password);

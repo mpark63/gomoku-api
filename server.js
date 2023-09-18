@@ -19,9 +19,11 @@ export const io = new Server(httpServer, {
 // listening to events
 io.on("connection", (socket) => {
   console.log("a user connected");
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });
+  
   socket.on("join game", (username, gamecode) => {
     console.log(`${username} joined ${gamecode}`);
     socket.join(gamecode);

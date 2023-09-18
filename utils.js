@@ -2,9 +2,7 @@ import bcrypt from "bcrypt";
 
 export const hashPassword = (password) => {
   try {
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    return hashedPassword;
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
   } catch (err) {
     throw err;
   }
@@ -32,9 +30,7 @@ export const checkGameOver = (board, newX, newY) => {
   let y = newY;
   let count = 0;
   let color = "";
-  console.log(newX, newY);
   for (let x = startX; x <= endX; x++) {
-    console.log(x, y, board[x][y]);
     if (board[x][y] === "") {
       count = 0;
       color = "";
@@ -55,7 +51,6 @@ export const checkGameOver = (board, newX, newY) => {
   count = 0;
   color = "";
   for (let y = startY; y <= endY; y++) {
-    console.log(x, y, board[x][y], count);
     if (board[x][y] === "") {
       count = 0;
       color = "";

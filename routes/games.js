@@ -5,7 +5,7 @@ import { io } from "../server.js";
 
 const router = express.Router();
 
-/* Create new game. */
+// create a new game 
 router.post("/games", async function (req, res) {
   const { blackUsername } = req.body;
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -17,10 +17,16 @@ router.post("/games", async function (req, res) {
   }
 });
 
+// get a game by code
 router.get("/games/:code", async function (req, res) {
   const { code } = req.params;
   const { username } = req.query;
   const game = await Games.findOne({ code });
+
+  // 404 
+  if (game === null) {
+    return errorHandler(res, 404, { message: "Game not found!" });
+  }
 
   // 403
   if (!username) {
@@ -33,21 +39,18 @@ router.get("/games/:code", async function (req, res) {
   if (game.blackUsername != username && game.whiteUsername === "") {
     game.whiteUsername = username;
     await game.save();
+  }  
+
+  if (game.whiteUsername !== username && game.blackUsername !== username) {
+    return errorHandler(res, 403, {
+      message: "You are not a player in this game!",
+    });
   }
 
-  if (game === null) {
-    errorHandler(res, 404, { message: "Game not found!" });
-  } else {
-    if (game.whiteUsername !== username && game.blackUsername !== username) {
-      errorHandler(res, 403, {
-        message: "You are not a player in this game!",
-      });
-    } else {
-      dataHandler(res, 200, game);
-    }
-  }
+  dataHandler(res, 200, game);
 });
 
+// update game state 
 router.patch("/games/:code", async function (req, res) {
   const { code } = req.params;
   const { username, x, y } = req.body;
